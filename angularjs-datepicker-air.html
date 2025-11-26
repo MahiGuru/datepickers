@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AngularJS DateTime Picker - Air Datepicker</title>
+
+    <!-- Air Datepicker CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #dd1b16 0%, #b71c1c 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      header h1 {
+        margin: 0 0 10px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      header p {
+        margin: 0;
+        opacity: 0.9;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        margin-top: 0;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #dd1b16;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+
+      .output-panel {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #dd1b16;
+      }
+
+      .output-panel h3 {
+        margin-top: 0;
+        color: #dd1b16;
+      }
+
+      .output-panel p {
+        margin: 8px 0;
+        font-family: monospace;
+        background: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+      }
+
+      .output-panel strong {
+        color: #666;
+        min-width: 120px;
+        display: inline-block;
+      }
+
+      .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .code-block .comment {
+        color: #6a9955;
+      }
+      .code-block .keyword {
+        color: #569cd6;
+      }
+      .code-block .string {
+        color: #ce9178;
+      }
+      .code-block .function {
+        color: #dcdcaa;
+      }
+      .code-block .property {
+        color: #9cdcfe;
+      }
+
+      .loading-msg {
+        padding: 40px;
+        text-align: center;
+        color: #666;
+      }
+
+      .error-msg {
+        padding: 15px;
+        background: #fee;
+        border: 1px solid #fcc;
+        border-radius: 8px;
+        color: #c00;
+      }
+
+      .badge {
+        display: inline-block;
+        background: #dd1b16;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+
+      /* Air Datepicker custom theme */
+      .air-datepicker {
+        --adp-accent-color: #dd1b16;
+        --adp-color-secondary: #b71c1c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🅰️ AngularJS DateTime Picker</h1>
+        <p>Air Datepicker integration with custom AngularJS directive</p>
+      </header>
+
+      <!-- Demo Section -->
+      <div class="card">
+        <h2>
+          Live Demo <span class="badge">AngularJS 1.8 + Air Datepicker</span>
+        </h2>
+
+        <div id="ng-app">
+          <div class="loading-msg">Loading AngularJS...</div>
+        </div>
+      </div>
+
+      <!-- Code Section -->
+      <div class="card">
+        <h2>📝 AngularJS Directive Code</h2>
+
+        <div class="code-block">
+          <span class="comment">// Air Datepicker Directive for AngularJS</span>
+          app.<span class="function">directive</span>(<span class="string"
+            >'airDatepicker'</span
+          >, [<span class="string">'$timeout'</span>,
+          <span class="keyword">function</span>($timeout) {
+          <span class="keyword">return</span> {
+          <span class="property">restrict</span>:
+          <span class="string">'A'</span>,
+          <span class="property">require</span>:
+          <span class="string">'ngModel'</span>,
+          <span class="property">scope</span>: {
+          <span class="property">adpOptions</span>:
+          <span class="string">'='</span>,
+          <span class="property">adpOnSelect</span>:
+          <span class="string">'&'</span>
+          },
+          <span class="property">link</span>:
+          <span class="keyword">function</span>(scope, element, attrs, ngModel)
+          { <span class="keyword">var</span> config = angular.<span
+            class="function"
+            >copy</span
+          >(scope.adpOptions) || {};
+
+          <span class="comment">// Sync with ng-model</span>
+          config.<span class="property">onSelect</span> =
+          <span class="keyword">function</span>({date, formattedDate}) {
+          $timeout(<span class="keyword">function</span>() { ngModel.<span
+            class="function"
+            >$setViewValue</span
+          >(formattedDate); <span class="keyword">if</span> (scope.adpOnSelect)
+          { scope.<span class="function">adpOnSelect</span>({ date: date,
+          formattedDate: formattedDate }); } }); };
+
+          <span class="keyword">var</span> picker =
+          <span class="keyword">new</span>
+          <span class="function">AirDatepicker</span>(element[0], config);
+
+          <span class="comment">// Cleanup on destroy</span>
+          scope.<span class="function">$on</span>(<span class="string"
+            >'$destroy'</span
+          >, <span class="keyword">function</span>() { picker.<span
+            class="function"
+            >destroy</span
+          >(); }); } }; }]);
+        </div>
+      </div>
+
+      <!-- Usage Section -->
+      <div class="card">
+        <h2>📖 HTML Usage</h2>
+
+        <div class="code-block">
+          <span class="comment">&lt;!-- Basic Date Picker --&gt;</span>
+          &lt;<span class="keyword">input</span>
+          <span class="property">type</span>=<span class="string">"text"</span>
+          <span class="property">air-datepicker</span>
+          <span class="property">ng-model</span>=<span class="string"
+            >"selectedDate"</span
+          >
+          <span class="property">adp-options</span>=<span class="string"
+            >"{ dateFormat: 'yyyy-MM-dd' }"</span
+          >&gt;
+
+          <span class="comment">&lt;!-- DateTime Picker --&gt;</span>
+          &lt;<span class="keyword">input</span>
+          <span class="property">type</span>=<span class="string">"text"</span>
+          <span class="property">air-datepicker</span>
+          <span class="property">ng-model</span>=<span class="string"
+            >"selectedDateTime"</span
+          >
+          <span class="property">adp-options</span>=<span class="string"
+            >"{ timepicker: true, dateFormat: 'yyyy-MM-dd HH:mm' }"</span
+          >&gt;
+
+          <span class="comment">&lt;!-- Range Picker --&gt;</span>
+          &lt;<span class="keyword">input</span>
+          <span class="property">type</span>=<span class="string">"text"</span>
+          <span class="property">air-datepicker</span>
+          <span class="property">ng-model</span>=<span class="string"
+            >"dateRange"</span
+          >
+          <span class="property">adp-options</span>=<span class="string"
+            >"{ range: true, multipleDatesSeparator: ' - ' }"</span
+          >&gt;
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Script loader
+      function loadScript(urls) {
+        return new Promise((resolve, reject) => {
+          var urlList = Array.isArray(urls) ? urls : [urls];
+          var currentIndex = 0;
+
+          function tryLoad() {
+            if (currentIndex >= urlList.length) {
+              reject(new Error("All CDNs failed"));
+              return;
+            }
+
+            var script = document.createElement("script");
+            script.src = urlList[currentIndex];
+            script.onload = resolve;
+            script.onerror = function () {
+              currentIndex++;
+              tryLoad();
+            };
+            document.head.appendChild(script);
+          }
+          tryLoad();
+        });
+      }
+
+      async function initApp() {
+        try {
+          // Load Air Datepicker
+          await loadScript([
+            "https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.js",
+          ]);
+          console.log("✓ Air Datepicker loaded");
+
+          // Load AngularJS
+          await loadScript([
+            "https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js",
+            "https://unpkg.com/angular@1.8.2/angular.min.js",
+          ]);
+          console.log("✓ AngularJS loaded");
+
+          initAngularJS();
+        } catch (error) {
+          document.getElementById("ng-app").innerHTML =
+            '<div class="error-msg">Failed to load: ' +
+            error.message +
+            "</div>";
+        }
+      }
+
+      function initAngularJS() {
+        // English locale definition
+        var localeEn = {
+          days: [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ],
+          daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+          daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+          months: [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ],
+          monthsShort: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+          today: "Today",
+          clear: "Clear",
+          dateFormat: "MM/dd/yyyy",
+          timeFormat: "hh:mm aa",
+          firstDay: 0,
+        };
+
+        var template = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📅 Date Picker</label>
+                        <input type="text" air-datepicker ng-model="date" 
+                               placeholder="Select date..." adp-options="dateOpts">
+                    </div>
+                    <div class="form-group">
+                        <label>🕐 DateTime Picker</label>
+                        <input type="text" air-datepicker ng-model="dateTime" 
+                               placeholder="Select date & time..." adp-options="dateTimeOpts">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📆 Date Range</label>
+                        <input type="text" air-datepicker ng-model="range" 
+                               placeholder="Select range..." adp-options="rangeOpts">
+                    </div>
+                    <div class="form-group">
+                        <label>⏰ Time Only</label>
+                        <input type="text" air-datepicker ng-model="time" 
+                               placeholder="Select time..." adp-options="timeOpts">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📅 Multiple Dates</label>
+                        <input type="text" air-datepicker ng-model="multipleDates" 
+                               placeholder="Select multiple dates..." adp-options="multiOpts">
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Inline Calendar</label>
+                        <div air-datepicker ng-model="inlineDate" adp-options="inlineOpts" 
+                             style="display:inline-block;"></div>
+                    </div>
+                </div>
+                
+                <div class="output-panel">
+                    <h3>Selected Values (ng-model binding)</h3>
+                    <p><strong>Date:</strong> {{ date || 'Not selected' }}</p>
+                    <p><strong>DateTime:</strong> {{ dateTime || 'Not selected' }}</p>
+                    <p><strong>Range:</strong> {{ range || 'Not selected' }}</p>
+                    <p><strong>Time:</strong> {{ time || 'Not selected' }}</p>
+                    <p><strong>Multiple:</strong> {{ multipleDates || 'Not selected' }}</p>
+                    <p><strong>Inline:</strong> {{ inlineDate || 'Not selected' }}</p>
+                </div>
+            `;
+
+        document.getElementById("ng-app").innerHTML = template;
+
+        var app = angular.module("airDatepickerApp", []);
+
+        // Air Datepicker Directive
+        app.directive("airDatepicker", [
+          "$timeout",
+          function ($timeout) {
+            return {
+              restrict: "A",
+              require: "?ngModel",
+              scope: {
+                adpOptions: "=",
+                adpOnSelect: "&",
+              },
+              link: function (scope, element, attrs, ngModel) {
+                var config = angular.copy(scope.adpOptions) || {};
+
+                // Set English locale if not specified
+                if (!config.locale) {
+                  config.locale = localeEn;
+                }
+
+                // Sync with ng-model
+                config.onSelect = function (params) {
+                  $timeout(function () {
+                    if (ngModel) {
+                      ngModel.$setViewValue(params.formattedDate);
+                    }
+                    if (scope.adpOnSelect) {
+                      scope.adpOnSelect({
+                        date: params.date,
+                        formattedDate: params.formattedDate,
+                      });
+                    }
+                  });
+                };
+
+                var picker = new AirDatepicker(element[0], config);
+
+                // Watch for external model changes
+                if (ngModel) {
+                  ngModel.$render = function () {
+                    if (ngModel.$viewValue) {
+                      picker.selectDate(new Date(ngModel.$viewValue), {
+                        silent: true,
+                      });
+                    }
+                  };
+                }
+
+                // Cleanup on destroy
+                scope.$on("$destroy", function () {
+                  picker.destroy();
+                });
+              },
+            };
+          },
+        ]);
+
+        // Controller
+        app.controller("MainCtrl", [
+          "$scope",
+          function ($scope) {
+            $scope.date = "";
+            $scope.dateTime = "";
+            $scope.range = "";
+            $scope.time = "";
+            $scope.multipleDates = "";
+            $scope.inlineDate = "";
+
+            // Air Datepicker configurations
+            $scope.dateOpts = {
+              dateFormat: "yyyy-MM-dd",
+              autoClose: true,
+            };
+
+            $scope.dateTimeOpts = {
+              timepicker: true,
+              dateFormat: "yyyy-MM-dd HH:mm",
+            };
+
+            $scope.rangeOpts = {
+              range: true,
+              multipleDatesSeparator: " to ",
+              dateFormat: "yyyy-MM-dd",
+            };
+
+            $scope.timeOpts = {
+              timepicker: true,
+              onlyTimepicker: true,
+              dateFormat: "HH:mm",
+            };
+
+            $scope.multiOpts = {
+              multipleDates: true,
+              multipleDatesSeparator: ", ",
+              dateFormat: "yyyy-MM-dd",
+            };
+
+            $scope.inlineOpts = {
+              inline: true,
+              dateFormat: "yyyy-MM-dd",
+            };
+          },
+        ]);
+
+        var appElement = document.getElementById("ng-app");
+        angular.element(appElement).attr("ng-controller", "MainCtrl");
+        angular.bootstrap(appElement, ["airDatepickerApp"]);
+
+        console.log("✓ AngularJS app initialized");
+      }
+
+      initApp();
+    </script>
+  </body>
+</html>

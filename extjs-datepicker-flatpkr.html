@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExtJS DateTime Picker - Vanilla JS Alternative</title>
+
+    <!-- Flatpickr CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #86bc40 0%, #5a8c2a 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      header h1 {
+        margin: 0 0 10px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      header p {
+        margin: 0;
+        opacity: 0.9;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        margin-top: 0;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        color: #333;
+      }
+
+      /* ExtJS-style form styling */
+      .x-form-panel {
+        padding: 10px;
+      }
+
+      .x-form-item {
+        margin-bottom: 15px;
+      }
+
+      .x-form-item-label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #333;
+        font-size: 13px;
+      }
+
+      .x-form-field {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #b5b5b5;
+        border-radius: 3px;
+        font-size: 13px;
+        background: #fff;
+        transition: border-color 0.2s;
+      }
+
+      .x-form-field:focus {
+        outline: none;
+        border-color: #86bc40;
+        box-shadow: 0 0 0 1px #86bc40;
+      }
+
+      .x-fieldcontainer {
+        display: flex;
+        gap: 10px;
+      }
+
+      .x-fieldcontainer .x-form-field {
+        flex: 1;
+      }
+
+      .x-form-display-field {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        margin-top: 15px;
+      }
+
+      .x-form-display-field p {
+        margin: 6px 0;
+        font-family: "Consolas", monospace;
+        font-size: 12px;
+      }
+
+      .x-form-display-field strong {
+        color: #86bc40;
+        min-width: 100px;
+        display: inline-block;
+      }
+
+      .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .code-block .comment {
+        color: #6a9955;
+      }
+      .code-block .keyword {
+        color: #569cd6;
+      }
+      .code-block .string {
+        color: #ce9178;
+      }
+      .code-block .function {
+        color: #dcdcaa;
+      }
+      .code-block .property {
+        color: #9cdcfe;
+      }
+      .code-block .number {
+        color: #b5cea8;
+      }
+
+      .info-box {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #856404;
+      }
+
+      .info-box strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .badge {
+        display: inline-block;
+        background: #86bc40;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+
+      .badge-alt {
+        background: #f7df1e;
+        color: #333;
+      }
+
+      .tab-buttons {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 15px;
+      }
+
+      .tab-btn {
+        padding: 10px 20px;
+        border: none;
+        background: #e0e0e0;
+        border-radius: 6px 6px 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s;
+      }
+
+      .tab-btn.active {
+        background: #86bc40;
+        color: white;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>📦 ExtJS-Style DateTime Picker</h1>
+        <p>Vanilla JS implementation with ExtJS patterns + Flatpickr</p>
+      </header>
+
+      <div class="info-box">
+        <strong>⚠️ Note on ExtJS CDN</strong>
+        ExtJS CDN requires a commercial license and is often blocked. This demo
+        shows ExtJS-style patterns using vanilla JavaScript + Flatpickr. The
+        actual ExtJS code is provided in the code section below for use with a
+        local ExtJS installation.
+      </div>
+
+      <!-- Demo Section -->
+      <div class="card">
+        <h2>
+          Live Demo <span class="badge badge-alt">Vanilla JS + Flatpickr</span>
+        </h2>
+
+        <div id="ext-panel" class="x-form-panel">
+          <!-- Will be populated by JS -->
+        </div>
+      </div>
+
+      <!-- Code Section -->
+      <div class="card">
+        <h2>📝 Code Examples</h2>
+
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="showTab('extjs')">
+            ExtJS Code
+          </button>
+          <button class="tab-btn" onclick="showTab('vanilla')">
+            Vanilla JS Equivalent
+          </button>
+        </div>
+
+        <div id="tab-extjs" class="tab-content active">
+          <div class="code-block">
+            <span class="comment">// ExtJS Form Panel with Date Fields</span>
+            Ext.<span class="function">create</span>(<span class="string"
+              >'Ext.form.Panel'</span
+            >, { <span class="property">renderTo</span>:
+            <span class="string">'container'</span>,
+            <span class="property">title</span>:
+            <span class="string">'Date Selection'</span>,
+            <span class="property">bodyPadding</span>:
+            <span class="number">10</span>,
+            <span class="property">defaults</span>: {
+            <span class="property">anchor</span>:
+            <span class="string">'100%'</span>,
+            <span class="property">labelWidth</span>:
+            <span class="number">120</span>
+            },
+            <span class="property">items</span>: [ {
+            <span class="property">xtype</span>:
+            <span class="string">'datefield'</span>,
+            <span class="property">fieldLabel</span>:
+            <span class="string">'Date'</span>,
+            <span class="property">name</span>:
+            <span class="string">'date'</span>,
+            <span class="property">format</span>:
+            <span class="string">'Y-m-d'</span>,
+            <span class="property">emptyText</span>:
+            <span class="string">'Select date...'</span>,
+            <span class="property">listeners</span>: {
+            <span class="property">change</span>:
+            <span class="keyword">function</span>(field, newVal) { console.<span
+              class="function"
+              >log</span
+            >(<span class="string">'Date changed:'</span>, newVal); } } }, {
+            <span class="property">xtype</span>:
+            <span class="string">'timefield'</span>,
+            <span class="property">fieldLabel</span>:
+            <span class="string">'Time'</span>,
+            <span class="property">name</span>:
+            <span class="string">'time'</span>,
+            <span class="property">format</span>:
+            <span class="string">'H:i'</span>,
+            <span class="property">increment</span>:
+            <span class="number">15</span>,
+            <span class="property">emptyText</span>:
+            <span class="string">'Select time...'</span>
+            }, {
+            <span class="comment"
+              >// Combined DateTime using Ext.ux.DateTimeField or plugin</span
+            >
+            <span class="property">xtype</span>:
+            <span class="string">'datetimefield'</span>,
+            <span class="comment">// requires ux extension</span>
+            <span class="property">fieldLabel</span>:
+            <span class="string">'DateTime'</span>,
+            <span class="property">name</span>:
+            <span class="string">'datetime'</span>,
+            <span class="property">format</span>:
+            <span class="string">'Y-m-d H:i'</span>,
+            <span class="property">emptyText</span>:
+            <span class="string">'Select date and time...'</span>
+            }, {
+            <span class="comment"
+              >// DateTime using fieldcontainer (alternative)</span
+            >
+            <span class="property">xtype</span>:
+            <span class="string">'fieldcontainer'</span>,
+            <span class="property">fieldLabel</span>:
+            <span class="string">'DateTime'</span>,
+            <span class="property">layout</span>:
+            <span class="string">'hbox'</span>,
+            <span class="property">items</span>: [ {
+            <span class="property">xtype</span>:
+            <span class="string">'datefield'</span>,
+            <span class="property">flex</span>: <span class="number">1</span> },
+            { <span class="property">xtype</span>:
+            <span class="string">'timefield'</span>,
+            <span class="property">flex</span>: <span class="number">1</span> }
+            ] }, {
+            <span class="comment">// Date Range with validation</span>
+            <span class="property">xtype</span>:
+            <span class="string">'datefield'</span>,
+            <span class="property">fieldLabel</span>:
+            <span class="string">'Start Date'</span>,
+            <span class="property">name</span>:
+            <span class="string">'startDate'</span>,
+            <span class="property">itemId</span>:
+            <span class="string">'startDate'</span>,
+            <span class="property">listeners</span>: {
+            <span class="property">change</span>:
+            <span class="keyword">function</span>(field, val) {
+            <span class="keyword">var</span> endDate = field.<span
+              class="function"
+              >up</span
+            >(<span class="string">'form'</span>).<span class="function"
+              >down</span
+            >(<span class="string">'#endDate'</span>); endDate.<span
+              class="function"
+              >setMinValue</span
+            >(val); } } }, { <span class="property">xtype</span>:
+            <span class="string">'datefield'</span>,
+            <span class="property">fieldLabel</span>:
+            <span class="string">'End Date'</span>,
+            <span class="property">name</span>:
+            <span class="string">'endDate'</span>,
+            <span class="property">itemId</span>:
+            <span class="string">'endDate'</span>
+            } ],
+            <span class="property">buttons</span>: [{
+            <span class="property">text</span>:
+            <span class="string">'Get Values'</span>,
+            <span class="property">handler</span>:
+            <span class="keyword">function</span>() {
+            <span class="keyword">var</span> values =
+            <span class="keyword">this</span>.<span class="function">up</span
+            >(<span class="string">'form'</span>).<span class="function"
+              >getValues</span
+            >(); console.<span class="function">log</span>(values); } }] });
+          </div>
+        </div>
+
+        <div id="tab-vanilla" class="tab-content">
+          <div class="code-block">
+            <span class="comment"
+              >// Vanilla JS + Flatpickr (ExtJS-style pattern)</span
+            >
+            <span class="keyword">class</span>
+            <span class="function">ExtStyleForm</span> {
+            <span class="function">constructor</span>(config) {
+            <span class="keyword">this</span>.renderTo = document.<span
+              class="function"
+              >getElementById</span
+            >(config.renderTo); <span class="keyword">this</span>.fields = {};
+            <span class="keyword">this</span>.<span class="function"
+              >render</span
+            >(config.items); }
+
+            <span class="function">render</span>(items) { items.<span
+              class="function"
+              >forEach</span
+            >(item => { <span class="keyword">const</span> wrapper =
+            document.<span class="function">createElement</span>(<span
+              class="string"
+              >'div'</span
+            >); wrapper.className = <span class="string">'x-form-item'</span>;
+
+            <span class="keyword">const</span> label = document.<span
+              class="function"
+              >createElement</span
+            >(<span class="string">'label'</span>); label.className =
+            <span class="string">'x-form-item-label'</span>; label.textContent =
+            item.fieldLabel;
+
+            <span class="keyword">const</span> input = document.<span
+              class="function"
+              >createElement</span
+            >(<span class="string">'input'</span>); input.className =
+            <span class="string">'x-form-field'</span>; input.placeholder =
+            item.emptyText || <span class="string">''</span>; wrapper.<span
+              class="function"
+              >appendChild</span
+            >(label); wrapper.<span class="function">appendChild</span>(input);
+            <span class="keyword">this</span>.renderTo.<span class="function"
+              >appendChild</span
+            >(wrapper);
+
+            <span class="comment">// Initialize flatpickr based on xtype</span>
+            <span class="keyword">const</span> fpConfig =
+            <span class="keyword">this</span>.<span class="function"
+              >getPickerConfig</span
+            >(item); <span class="keyword">this</span>.fields[item.name] =
+            <span class="function">flatpickr</span>(input, fpConfig); }); }
+
+            <span class="function">getPickerConfig</span>(item) {
+            <span class="keyword">switch</span>(item.xtype) {
+            <span class="keyword">case</span>
+            <span class="string">'datefield'</span>:
+            <span class="keyword">return</span> {
+            <span class="property">dateFormat</span>: item.format ||
+            <span class="string">'Y-m-d'</span> };
+            <span class="keyword">case</span>
+            <span class="string">'timefield'</span>:
+            <span class="keyword">return</span> {
+            <span class="property">enableTime</span>:
+            <span class="keyword">true</span>,
+            <span class="property">noCalendar</span>:
+            <span class="keyword">true</span>,
+            <span class="property">dateFormat</span>: item.format ||
+            <span class="string">'H:i'</span>,
+            <span class="property">minuteIncrement</span>: item.increment ||
+            <span class="number">5</span>
+            };
+            <span class="keyword">case</span>
+            <span class="string">'datetimefield'</span>:
+            <span class="keyword">return</span> {
+            <span class="property">enableTime</span>:
+            <span class="keyword">true</span>,
+            <span class="property">dateFormat</span>: item.format ||
+            <span class="string">'Y-m-d H:i'</span>,
+            <span class="property">time_24hr</span>:
+            <span class="keyword">true</span>
+            }; } }
+
+            <span class="function">getValues</span>() {
+            <span class="keyword">const</span> values = {}; Object.<span
+              class="function"
+              >keys</span
+            >(<span class="keyword">this</span>.fields).<span class="function"
+              >forEach</span
+            >(name => { values[name] =
+            <span class="keyword">this</span>.fields[name].input.value; });
+            <span class="keyword">return</span> values; } }
+          </div>
+        </div>
+      </div>
+
+      <!-- Installation Section -->
+      <div class="card">
+        <h2>📦 Using Real ExtJS</h2>
+
+        <div class="code-block">
+          <span class="comment">// Option 1: Download ExtJS from Sencha</span>
+          <span class="comment">// https://www.sencha.com/products/extjs/</span>
+
+          <span class="comment"
+            >// Option 2: Use ExtJS GPL (older version 3.4)</span
+          >
+          &lt;<span class="keyword">script</span>
+          <span class="property">src</span>=<span class="string"
+            >"path/to/ext-all.js"</span
+          >&gt;&lt;/<span class="keyword">script</span>&gt; &lt;<span
+            class="keyword"
+            >link</span
+          >
+          <span class="property">rel</span>=<span class="string"
+            >"stylesheet"</span
+          >
+          <span class="property">href</span>=<span class="string"
+            >"path/to/ext-theme.css"</span
+          >&gt;
+
+          <span class="comment">// Option 3: NPM (requires license)</span>
+          npm install @sencha/ext
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Tab switching
+      function showTab(tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById("tab-" + tabId).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      // Load Flatpickr and initialize demo
+      function loadScript(url) {
+        return new Promise((resolve, reject) => {
+          var script = document.createElement("script");
+          script.src = url;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      async function initDemo() {
+        try {
+          await loadScript(
+            "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"
+          );
+          console.log("✓ Flatpickr loaded");
+
+          renderExtStyleForm();
+        } catch (error) {
+          document.getElementById("ext-panel").innerHTML =
+            '<div class="error-msg">Failed to load Flatpickr</div>';
+        }
+      }
+
+      // ExtJS-style Form Implementation with Vanilla JS
+      function renderExtStyleForm() {
+        var panel = document.getElementById("ext-panel");
+
+        panel.innerHTML = `
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📅 Date Field</label>
+                    <input type="text" id="ext-date" class="x-form-field" placeholder="Select date...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">🕐 Time Field</label>
+                    <input type="text" id="ext-time" class="x-form-field" placeholder="Select time...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📅🕐 DateTime (combined)</label>
+                    <input type="text" id="ext-datetime" class="x-form-field" placeholder="Select date and time...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📅🕐 DateTime (fieldcontainer style)</label>
+                    <div class="x-fieldcontainer">
+                        <input type="text" id="ext-dt-date" class="x-form-field" placeholder="Date...">
+                        <input type="text" id="ext-dt-time" class="x-form-field" placeholder="Time...">
+                    </div>
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📆 Start Date</label>
+                    <input type="text" id="ext-start" class="x-form-field" placeholder="Start date...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📆 End Date</label>
+                    <input type="text" id="ext-end" class="x-form-field" placeholder="End date...">
+                </div>
+                
+                <div class="x-form-display-field" id="ext-output">
+                    <p><strong>Date:</strong> Not selected</p>
+                    <p><strong>Time:</strong> Not selected</p>
+                    <p><strong>DateTime:</strong> Not selected</p>
+                    <p><strong>DateTime (split):</strong> Not selected</p>
+                    <p><strong>Start:</strong> Not selected</p>
+                    <p><strong>End:</strong> Not selected</p>
+                </div>
+            `;
+
+        // Initialize Flatpickr instances (ExtJS-style configs)
+        var pickers = {};
+
+        // datefield equivalent
+        pickers.date = flatpickr("#ext-date", {
+          dateFormat: "Y-m-d",
+          theme: "airbnb",
+          onChange: updateOutput,
+        });
+
+        // timefield equivalent
+        pickers.time = flatpickr("#ext-time", {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: "H:i",
+          time_24hr: true,
+          minuteIncrement: 15,
+          onChange: updateOutput,
+        });
+
+        // Combined DateTime picker (like AngularJS demo)
+        pickers.dateTime = flatpickr("#ext-datetime", {
+          enableTime: true,
+          dateFormat: "Y-m-d H:i",
+          time_24hr: true,
+          minuteIncrement: 5,
+          onChange: updateOutput,
+        });
+
+        // fieldcontainer with date + time (ExtJS split style)
+        pickers.dtDate = flatpickr("#ext-dt-date", {
+          dateFormat: "Y-m-d",
+          onChange: updateOutput,
+        });
+
+        pickers.dtTime = flatpickr("#ext-dt-time", {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: "H:i",
+          time_24hr: true,
+          minuteIncrement: 15,
+          onChange: updateOutput,
+        });
+
+        // Date range with validation (like ExtJS setMinValue/setMaxValue)
+        pickers.start = flatpickr("#ext-start", {
+          dateFormat: "Y-m-d",
+          onChange: function (selectedDates, dateStr) {
+            // ExtJS-style: endField.setMinValue(val)
+            pickers.end.set("minDate", dateStr);
+            updateOutput();
+          },
+        });
+
+        pickers.end = flatpickr("#ext-end", {
+          dateFormat: "Y-m-d",
+          onChange: function (selectedDates, dateStr) {
+            // ExtJS-style: startField.setMaxValue(val)
+            pickers.start.set("maxDate", dateStr);
+            updateOutput();
+          },
+        });
+
+        window.extPickers = pickers;
+
+        function updateOutput() {
+          var date =
+            document.getElementById("ext-date").value || "Not selected";
+          var time =
+            document.getElementById("ext-time").value || "Not selected";
+          var dateTime =
+            document.getElementById("ext-datetime").value || "Not selected";
+          var dtDate = document.getElementById("ext-dt-date").value;
+          var dtTime = document.getElementById("ext-dt-time").value;
+          var dateTimeSplit =
+            dtDate && dtTime ? dtDate + " " + dtTime : "Not selected";
+          var start =
+            document.getElementById("ext-start").value || "Not selected";
+          var end = document.getElementById("ext-end").value || "Not selected";
+
+          document.getElementById("ext-output").innerHTML = `
+                    <p><strong>Date:</strong> ${date}</p>
+                    <p><strong>Time:</strong> ${time}</p>
+                    <p><strong>DateTime:</strong> ${dateTime}</p>
+                    <p><strong>DateTime (split):</strong> ${dateTimeSplit}</p>
+                    <p><strong>Start:</strong> ${start}</p>
+                    <p><strong>End:</strong> ${end}</p>
+                `;
+        }
+
+        console.log("✓ ExtJS-style form initialized");
+      }
+
+      // Initialize
+      initDemo();
+    </script>
+  </body>
+</html>

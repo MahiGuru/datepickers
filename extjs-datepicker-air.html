@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExtJS DateTime Picker - Air Datepicker</title>
+
+    <!-- Air Datepicker CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #86bc40 0%, #5a8c2a 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      header h1 {
+        margin: 0 0 10px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      header p {
+        margin: 0;
+        opacity: 0.9;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        margin-top: 0;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        color: #333;
+      }
+
+      /* ExtJS-style form styling */
+      .x-form-panel {
+        padding: 10px;
+      }
+
+      .x-form-item {
+        margin-bottom: 15px;
+      }
+
+      .x-form-item-label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #333;
+        font-size: 13px;
+      }
+
+      .x-form-field {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #b5b5b5;
+        border-radius: 3px;
+        font-size: 13px;
+        background: #fff;
+        transition: border-color 0.2s;
+      }
+
+      .x-form-field:focus {
+        outline: none;
+        border-color: #86bc40;
+        box-shadow: 0 0 0 1px #86bc40;
+      }
+
+      .x-fieldcontainer {
+        display: flex;
+        gap: 10px;
+      }
+
+      .x-fieldcontainer .x-form-field {
+        flex: 1;
+      }
+
+      .x-form-display-field {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        margin-top: 15px;
+      }
+
+      .x-form-display-field p {
+        margin: 6px 0;
+        font-family: "Consolas", monospace;
+        font-size: 12px;
+      }
+
+      .x-form-display-field strong {
+        color: #86bc40;
+        min-width: 100px;
+        display: inline-block;
+      }
+
+      .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .code-block .comment {
+        color: #6a9955;
+      }
+      .code-block .keyword {
+        color: #569cd6;
+      }
+      .code-block .string {
+        color: #ce9178;
+      }
+      .code-block .function {
+        color: #dcdcaa;
+      }
+      .code-block .property {
+        color: #9cdcfe;
+      }
+      .code-block .number {
+        color: #b5cea8;
+      }
+
+      .info-box {
+        background: #e8f5e9;
+        border: 1px solid #4caf50;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        color: #2e7d32;
+      }
+
+      .info-box strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .badge {
+        display: inline-block;
+        background: #86bc40;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+
+      .badge-alt {
+        background: #f7df1e;
+        color: #333;
+      }
+
+      .tab-buttons {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 15px;
+      }
+
+      .tab-btn {
+        padding: 10px 20px;
+        border: none;
+        background: #e0e0e0;
+        border-radius: 6px 6px 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.2s;
+      }
+
+      .tab-btn.active {
+        background: #86bc40;
+        color: white;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .inline-picker-container {
+        display: inline-block;
+        margin-top: 10px;
+      }
+
+      /* Air Datepicker custom theme for ExtJS style */
+      .air-datepicker {
+        --adp-accent-color: #86bc40;
+        --adp-color-secondary: #5a8c2a;
+      }
+
+      .loading-msg {
+        padding: 20px;
+        text-align: center;
+        color: #666;
+      }
+
+      .error-msg {
+        padding: 15px;
+        background: #fee;
+        border: 1px solid #fcc;
+        border-radius: 8px;
+        color: #c00;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>📦 ExtJS-Style DateTime Picker</h1>
+        <p>Vanilla JS implementation with Air Datepicker (Best UI)</p>
+      </header>
+
+      <div class="info-box">
+        <strong>✨ Air Datepicker Features</strong>
+        Lightweight (~15KB), no dependencies, beautiful UI, timepicker, range
+        selection, multiple dates, inline mode, 40+ locales, and CSS variables
+        for easy theming.
+      </div>
+
+      <!-- Demo Section -->
+      <div class="card">
+        <h2>
+          Live Demo
+          <span class="badge badge-alt">Vanilla JS + Air Datepicker</span>
+        </h2>
+
+        <div id="ext-panel" class="x-form-panel">
+          <div class="loading-msg">Loading Air Datepicker...</div>
+        </div>
+      </div>
+
+      <!-- Code Section -->
+      <div class="card">
+        <h2>📝 Code Examples</h2>
+
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="showTab('extjs')">
+            ExtJS Equivalent
+          </button>
+          <button class="tab-btn" onclick="showTab('vanilla')">
+            Vanilla JS Code
+          </button>
+        </div>
+
+        <div id="tab-extjs" class="tab-content active">
+          <div class="code-block">
+            <span class="comment"
+              >// ExtJS-style config translated to Air Datepicker</span
+            >
+            <span class="comment">// ExtJS: xtype: 'datefield'</span>
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#date'</span
+            >, { <span class="property">dateFormat</span>:
+            <span class="string">'yyyy-MM-dd'</span>,
+            <span class="property">autoClose</span>:
+            <span class="keyword">true</span>,
+            <span class="property">locale</span>: AirDatepicker.locale.en });
+
+            <span class="comment">// ExtJS: xtype: 'timefield'</span>
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#time'</span
+            >, { <span class="property">timepicker</span>:
+            <span class="keyword">true</span>,
+            <span class="property">onlyTimepicker</span>:
+            <span class="keyword">true</span>,
+            <span class="property">dateFormat</span>:
+            <span class="string">'HH:mm'</span>
+            });
+
+            <span class="comment"
+              >// ExtJS: combined date + time (no native support)</span
+            >
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#datetime'</span
+            >, { <span class="property">timepicker</span>:
+            <span class="keyword">true</span>,
+            <span class="property">dateFormat</span>:
+            <span class="string">'yyyy-MM-dd HH:mm'</span>
+            });
+
+            <span class="comment"
+              >// ExtJS: date range with setMinValue/setMaxValue</span
+            >
+            <span class="keyword">var</span> startPicker =
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#start'</span
+            >, { <span class="property">onSelect</span>:
+            <span class="keyword">function</span>({date}) { endPicker.<span
+              class="function"
+              >update</span
+            >({ <span class="property">minDate</span>: date }); } });
+            <span class="keyword">var</span> endPicker =
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#end'</span
+            >, { <span class="property">onSelect</span>:
+            <span class="keyword">function</span>({date}) { startPicker.<span
+              class="function"
+              >update</span
+            >({ <span class="property">maxDate</span>: date }); } });
+          </div>
+        </div>
+
+        <div id="tab-vanilla" class="tab-content">
+          <div class="code-block">
+            <span class="comment">// Full Air Datepicker initialization</span>
+            <span class="keyword">import</span> AirDatepicker
+            <span class="keyword">from</span>
+            <span class="string">'air-datepicker'</span>;
+            <span class="keyword">import</span>
+            <span class="string">'air-datepicker/air-datepicker.css'</span>;
+            <span class="keyword">import</span> localeEn
+            <span class="keyword">from</span>
+            <span class="string">'air-datepicker/locale/en'</span>;
+
+            <span class="comment">// DateTime picker with all features</span>
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#datetime-picker'</span
+            >, { <span class="property">locale</span>: localeEn,
+            <span class="property">timepicker</span>:
+            <span class="keyword">true</span>,
+            <span class="property">dateFormat</span>:
+            <span class="string">'yyyy-MM-dd HH:mm'</span>,
+            <span class="property">timeFormat</span>:
+            <span class="string">'HH:mm'</span>,
+            <span class="property">minDate</span>:
+            <span class="keyword">new</span>
+            <span class="function">Date</span>(),
+            <span class="property">position</span>:
+            <span class="string">'bottom center'</span>,
+            <span class="property">buttons</span>: [<span class="string"
+              >'today'</span
+            >, <span class="string">'clear'</span>],
+            <span class="property">onSelect</span>:
+            <span class="keyword">function</span>({date, formattedDate}) {
+            console.<span class="function">log</span>(<span class="string"
+              >'Selected:'</span
+            >, formattedDate); } });
+
+            <span class="comment">// Range picker</span>
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#range-picker'</span
+            >, { <span class="property">locale</span>: localeEn,
+            <span class="property">range</span>:
+            <span class="keyword">true</span>,
+            <span class="property">multipleDatesSeparator</span>:
+            <span class="string">' — '</span>,
+            <span class="property">dateFormat</span>:
+            <span class="string">'MMM dd, yyyy'</span>
+            });
+
+            <span class="comment">// Multiple dates</span>
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#multi-picker'</span
+            >, { <span class="property">locale</span>: localeEn,
+            <span class="property">multipleDates</span>:
+            <span class="keyword">true</span>,
+            <span class="property">multipleDatesSeparator</span>:
+            <span class="string">', '</span>
+            });
+
+            <span class="comment">// Inline calendar</span>
+            <span class="keyword">new</span>
+            <span class="function">AirDatepicker</span>(<span class="string"
+              >'#inline-picker'</span
+            >, { <span class="property">locale</span>: localeEn,
+            <span class="property">inline</span>:
+            <span class="keyword">true</span>,
+            <span class="property">selectedDates</span>: [<span class="keyword"
+              >new</span
+            >
+            <span class="function">Date</span>()] });
+          </div>
+        </div>
+      </div>
+
+      <!-- API Reference -->
+      <div class="card">
+        <h2>📚 Air Datepicker vs ExtJS API</h2>
+
+        <div class="code-block">
+          <span class="comment"
+            >// ExtJS datefield API → Air Datepicker equivalent</span
+          >
+
+          <span class="comment">// getValue()</span>
+          picker.<span class="property">selectedDates</span>[<span
+            class="number"
+            >0</span
+          >] <span class="comment">// returns Date object</span>
+
+          <span class="comment">// setValue(date)</span>
+          picker.<span class="function">selectDate</span>(date)
+          <span class="comment">// set selected date</span>
+
+          <span class="comment">// setMinValue(date)</span>
+          picker.<span class="function">update</span>({
+          <span class="property">minDate</span>: date })
+          <span class="comment">// set minimum date</span>
+
+          <span class="comment">// setMaxValue(date)</span>
+          picker.<span class="function">update</span>({
+          <span class="property">maxDate</span>: date })
+          <span class="comment">// set maximum date</span>
+
+          <span class="comment">// clear()</span>
+          picker.<span class="function">clear</span>()
+          <span class="comment">// clear selection</span>
+
+          <span class="comment">// show()/hide()</span>
+          picker.<span class="function">show</span>() / picker.<span
+            class="function"
+            >hide</span
+          >() <span class="comment">// toggle visibility</span>
+
+          <span class="comment">// destroy()</span>
+          picker.<span class="function">destroy</span>()
+          <span class="comment">// cleanup</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Tab switching
+      function showTab(tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((el) => el.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((el) => el.classList.remove("active"));
+        document.getElementById("tab-" + tabId).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      // Load scripts
+      function loadScript(url) {
+        return new Promise((resolve, reject) => {
+          var script = document.createElement("script");
+          script.src = url;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      async function initDemo() {
+        try {
+          await loadScript(
+            "https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.js"
+          );
+          console.log("✓ Air Datepicker loaded");
+
+          renderExtStyleForm();
+        } catch (error) {
+          document.getElementById("ext-panel").innerHTML =
+            '<div class="error-msg">Failed to load Air Datepicker: ' +
+            error.message +
+            "</div>";
+        }
+      }
+
+      function renderExtStyleForm() {
+        var panel = document.getElementById("ext-panel");
+
+        panel.innerHTML = `
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📅 Date Field</label>
+                    <input type="text" id="ext-date" class="x-form-field" placeholder="Select date...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">🕐 Time Field</label>
+                    <input type="text" id="ext-time" class="x-form-field" placeholder="Select time...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📅🕐 DateTime (combined)</label>
+                    <input type="text" id="ext-datetime" class="x-form-field" placeholder="Select date and time...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📆 Date Range (single input)</label>
+                    <input type="text" id="ext-range" class="x-form-field" placeholder="Select range...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📆 Date Range (start/end validation)</label>
+                    <div class="x-fieldcontainer">
+                        <input type="text" id="ext-start" class="x-form-field" placeholder="Start date...">
+                        <input type="text" id="ext-end" class="x-form-field" placeholder="End date...">
+                    </div>
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📅 Multiple Dates</label>
+                    <input type="text" id="ext-multi" class="x-form-field" placeholder="Select multiple dates...">
+                </div>
+                
+                <div class="x-form-item">
+                    <label class="x-form-item-label">📅 Inline Calendar</label>
+                    <div id="ext-inline" class="inline-picker-container"></div>
+                </div>
+                
+                <div class="x-form-display-field" id="ext-output">
+                    <p><strong>Date:</strong> Not selected</p>
+                    <p><strong>Time:</strong> Not selected</p>
+                    <p><strong>DateTime:</strong> Not selected</p>
+                    <p><strong>Range:</strong> Not selected</p>
+                    <p><strong>Start-End:</strong> Not selected</p>
+                    <p><strong>Multiple:</strong> Not selected</p>
+                    <p><strong>Inline:</strong> Not selected</p>
+                </div>
+            `;
+
+        var pickers = {};
+
+        // English locale definition
+        var localeEn = {
+          days: [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ],
+          daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+          daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+          months: [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ],
+          monthsShort: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+          today: "Today",
+          clear: "Clear",
+          dateFormat: "MM/dd/yyyy",
+          timeFormat: "hh:mm aa",
+          firstDay: 0,
+        };
+
+        // Date field (ExtJS: xtype: 'datefield')
+        pickers.date = new AirDatepicker("#ext-date", {
+          locale: localeEn,
+          dateFormat: "yyyy-MM-dd",
+          autoClose: true,
+          onSelect: updateOutput,
+        });
+
+        // Time field (ExtJS: xtype: 'timefield')
+        pickers.time = new AirDatepicker("#ext-time", {
+          locale: localeEn,
+          timepicker: true,
+          onlyTimepicker: true,
+          dateFormat: "HH:mm",
+          onSelect: updateOutput,
+        });
+
+        // DateTime combined (not native in ExtJS)
+        pickers.dateTime = new AirDatepicker("#ext-datetime", {
+          locale: localeEn,
+          timepicker: true,
+          dateFormat: "yyyy-MM-dd HH:mm",
+          onSelect: updateOutput,
+        });
+
+        // Range picker (single input)
+        pickers.range = new AirDatepicker("#ext-range", {
+          locale: localeEn,
+          range: true,
+          multipleDatesSeparator: " to ",
+          dateFormat: "yyyy-MM-dd",
+          onSelect: updateOutput,
+        });
+
+        // Start date with validation
+        pickers.start = new AirDatepicker("#ext-start", {
+          locale: localeEn,
+          dateFormat: "yyyy-MM-dd",
+          autoClose: true,
+          onSelect: function ({ date }) {
+            // ExtJS equivalent: endField.setMinValue(date)
+            pickers.end.update({ minDate: date });
+            updateOutput();
+          },
+        });
+
+        // End date with validation
+        pickers.end = new AirDatepicker("#ext-end", {
+          locale: localeEn,
+          dateFormat: "yyyy-MM-dd",
+          autoClose: true,
+          onSelect: function ({ date }) {
+            // ExtJS equivalent: startField.setMaxValue(date)
+            pickers.start.update({ maxDate: date });
+            updateOutput();
+          },
+        });
+
+        // Multiple dates
+        pickers.multi = new AirDatepicker("#ext-multi", {
+          locale: localeEn,
+          multipleDates: true,
+          multipleDatesSeparator: ", ",
+          dateFormat: "yyyy-MM-dd",
+          onSelect: updateOutput,
+        });
+
+        // Inline calendar
+        pickers.inline = new AirDatepicker("#ext-inline", {
+          locale: localeEn,
+          inline: true,
+          dateFormat: "yyyy-MM-dd",
+          onSelect: updateOutput,
+        });
+
+        window.extPickers = pickers;
+
+        function updateOutput() {
+          var date =
+            document.getElementById("ext-date").value || "Not selected";
+          var time =
+            document.getElementById("ext-time").value || "Not selected";
+          var dateTime =
+            document.getElementById("ext-datetime").value || "Not selected";
+          var range =
+            document.getElementById("ext-range").value || "Not selected";
+          var start = document.getElementById("ext-start").value;
+          var end = document.getElementById("ext-end").value;
+          var startEnd = start && end ? start + " to " + end : "Not selected";
+          var multi =
+            document.getElementById("ext-multi").value || "Not selected";
+          var inline =
+            pickers.inline.selectedDates.length > 0
+              ? pickers.inline.selectedDates
+                  .map((d) => formatDate(d))
+                  .join(", ")
+              : "Not selected";
+
+          document.getElementById("ext-output").innerHTML = `
+                    <p><strong>Date:</strong> ${date}</p>
+                    <p><strong>Time:</strong> ${time}</p>
+                    <p><strong>DateTime:</strong> ${dateTime}</p>
+                    <p><strong>Range:</strong> ${range}</p>
+                    <p><strong>Start-End:</strong> ${startEnd}</p>
+                    <p><strong>Multiple:</strong> ${multi}</p>
+                    <p><strong>Inline:</strong> ${inline}</p>
+                `;
+        }
+
+        function formatDate(date) {
+          var y = date.getFullYear();
+          var m = String(date.getMonth() + 1).padStart(2, "0");
+          var d = String(date.getDate()).padStart(2, "0");
+          return y + "-" + m + "-" + d;
+        }
+
+        console.log("✓ ExtJS-style form initialized with Air Datepicker");
+      }
+
+      initDemo();
+    </script>
+  </body>
+</html>

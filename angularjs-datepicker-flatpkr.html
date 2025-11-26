@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AngularJS DateTime Picker - Flatpickr Integration</title>
+
+    <!-- Flatpickr CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #dd1b16 0%, #b71c1c 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      header h1 {
+        margin: 0 0 10px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      header p {
+        margin: 0;
+        opacity: 0.9;
+      }
+
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        margin-top: 0;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eee;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #dd1b16;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+
+      .output-panel {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #dd1b16;
+      }
+
+      .output-panel h3 {
+        margin-top: 0;
+        color: #dd1b16;
+      }
+
+      .output-panel p {
+        margin: 8px 0;
+        font-family: monospace;
+        background: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+      }
+
+      .output-panel strong {
+        color: #666;
+        min-width: 120px;
+        display: inline-block;
+      }
+
+      .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .code-block .comment {
+        color: #6a9955;
+      }
+      .code-block .keyword {
+        color: #569cd6;
+      }
+      .code-block .string {
+        color: #ce9178;
+      }
+      .code-block .function {
+        color: #dcdcaa;
+      }
+      .code-block .property {
+        color: #9cdcfe;
+      }
+
+      .loading-msg {
+        padding: 40px;
+        text-align: center;
+        color: #666;
+      }
+
+      .error-msg {
+        padding: 15px;
+        background: #fee;
+        border: 1px solid #fcc;
+        border-radius: 8px;
+        color: #c00;
+      }
+
+      .badge {
+        display: inline-block;
+        background: #dd1b16;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🅰️ AngularJS DateTime Picker</h1>
+        <p>Flatpickr integration with custom AngularJS directive</p>
+      </header>
+
+      <!-- Demo Section -->
+      <div class="card">
+        <h2>Live Demo <span class="badge">AngularJS 1.8 + Flatpickr</span></h2>
+
+        <div id="ng-app">
+          <div class="loading-msg">Loading AngularJS...</div>
+        </div>
+      </div>
+
+      <!-- Code Section -->
+      <div class="card">
+        <h2>📝 AngularJS Directive Code</h2>
+
+        <div class="code-block">
+          <span class="comment">// Define the module</span>
+          <span class="keyword">var</span> app = angular.<span class="function"
+            >module</span
+          >(<span class="string">'datePickerApp'</span>, []);
+
+          <span class="comment">// Flatpickr Directive</span>
+          app.<span class="function">directive</span>(<span class="string"
+            >'flatpickr'</span
+          >, [<span class="string">'$timeout'</span>,
+          <span class="keyword">function</span>($timeout) {
+          <span class="keyword">return</span> {
+          <span class="property">restrict</span>:
+          <span class="string">'A'</span>,
+          <span class="property">require</span>:
+          <span class="string">'ngModel'</span>,
+          <span class="property">scope</span>: {
+          <span class="property">fpOptions</span>:
+          <span class="string">'='</span>,
+          <span class="property">fpOnChange</span>:
+          <span class="string">'&'</span>
+          },
+          <span class="property">link</span>:
+          <span class="keyword">function</span>(scope, element, attrs, ngModel)
+          { <span class="keyword">var</span> config = angular.<span
+            class="function"
+            >copy</span
+          >(scope.fpOptions) || {};
+
+          <span class="comment">// Sync with ng-model</span>
+          config.<span class="property">onChange</span> =
+          <span class="keyword">function</span>(selectedDates, dateStr) {
+          $timeout(<span class="keyword">function</span>() { ngModel.<span
+            class="function"
+            >$setViewValue</span
+          >(dateStr); <span class="keyword">if</span> (scope.fpOnChange) {
+          scope.<span class="function">fpOnChange</span>({ dates: selectedDates,
+          dateStr: dateStr }); } }); };
+
+          <span class="keyword">var</span> fp =
+          <span class="function">flatpickr</span>(element[0], config);
+
+          <span class="comment">// Watch for external model changes</span>
+          ngModel.<span class="property">$render</span> =
+          <span class="keyword">function</span>() {
+          <span class="keyword">if</span> (ngModel.$viewValue) { fp.<span
+            class="function"
+            >setDate</span
+          >(ngModel.$viewValue, <span class="keyword">false</span>); } };
+
+          <span class="comment">// Cleanup</span>
+          scope.<span class="function">$on</span>(<span class="string"
+            >'$destroy'</span
+          >, <span class="keyword">function</span>() { fp.<span class="function"
+            >destroy</span
+          >(); }); } }; }]);
+        </div>
+      </div>
+
+      <!-- Usage Section -->
+      <div class="card">
+        <h2>📖 HTML Usage</h2>
+
+        <div class="code-block">
+          <span class="comment">&lt;!-- Basic Date Picker --&gt;</span>
+          &lt;<span class="keyword">input</span>
+          <span class="property">type</span>=<span class="string">"text"</span>
+          <span class="property">flatpickr</span>
+          <span class="property">ng-model</span>=<span class="string"
+            >"selectedDate"</span
+          >
+          <span class="property">fp-options</span>=<span class="string"
+            >"{ dateFormat: 'Y-m-d' }"</span
+          >&gt;
+
+          <span class="comment">&lt;!-- DateTime Picker --&gt;</span>
+          &lt;<span class="keyword">input</span>
+          <span class="property">type</span>=<span class="string">"text"</span>
+          <span class="property">flatpickr</span>
+          <span class="property">ng-model</span>=<span class="string"
+            >"selectedDateTime"</span
+          >
+          <span class="property">fp-options</span>=<span class="string"
+            >"{ enableTime: true, dateFormat: 'Y-m-d H:i' }"</span
+          >&gt;
+
+          <span class="comment">&lt;!-- With callback --&gt;</span>
+          &lt;<span class="keyword">input</span>
+          <span class="property">type</span>=<span class="string">"text"</span>
+          <span class="property">flatpickr</span>
+          <span class="property">ng-model</span>=<span class="string"
+            >"date"</span
+          >
+          <span class="property">fp-options</span>=<span class="string"
+            >"dateOptions"</span
+          >
+          <span class="property">fp-on-change</span>=<span class="string"
+            >"onDateChange(dates, dateStr)"</span
+          >&gt;
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Script loader
+      function loadScript(urls) {
+        return new Promise((resolve, reject) => {
+          var urlList = Array.isArray(urls) ? urls : [urls];
+          var currentIndex = 0;
+
+          function tryLoad() {
+            if (currentIndex >= urlList.length) {
+              reject(new Error("All CDNs failed"));
+              return;
+            }
+
+            var script = document.createElement("script");
+            script.src = urlList[currentIndex];
+            script.onload = resolve;
+            script.onerror = function () {
+              currentIndex++;
+              tryLoad();
+            };
+            document.head.appendChild(script);
+          }
+          tryLoad();
+        });
+      }
+
+      async function initApp() {
+        try {
+          await loadScript([
+            "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js",
+          ]);
+          console.log("✓ Flatpickr loaded");
+
+          await loadScript([
+            "https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js",
+            "https://unpkg.com/angular@1.8.2/angular.min.js",
+          ]);
+          console.log("✓ AngularJS loaded");
+
+          initAngularJS();
+        } catch (error) {
+          document.getElementById("ng-app").innerHTML =
+            '<div class="error-msg">Failed to load: ' +
+            error.message +
+            "</div>";
+        }
+      }
+
+      function initAngularJS() {
+        var template = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📅 Date Picker</label>
+                        <input type="text" flatpickr ng-model="date" 
+                               placeholder="Select date..." fp-options="dateOpts">
+                    </div>
+                    <div class="form-group">
+                        <label>🕐 DateTime Picker</label>
+                        <input type="text" flatpickr ng-model="dateTime" 
+                               placeholder="Select date & time..." fp-options="dateTimeOpts">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📆 Date Range</label>
+                        <input type="text" flatpickr ng-model="range" 
+                               placeholder="Select range..." fp-options="rangeOpts">
+                    </div>
+                    <div class="form-group">
+                        <label>⏰ Time Only</label>
+                        <input type="text" flatpickr ng-model="time" 
+                               placeholder="Select time..." fp-options="timeOpts">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📅 Multiple Dates</label>
+                        <input type="text" flatpickr ng-model="multipleDates" 
+                               placeholder="Select multiple dates..." fp-options="multiOpts">
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Week Picker</label>
+                        <input type="text" flatpickr ng-model="week" 
+                               placeholder="Select week..." fp-options="weekOpts">
+                    </div>
+                </div>
+                
+                <div class="output-panel">
+                    <h3>Selected Values (ng-model binding)</h3>
+                    <p><strong>Date:</strong> {{ date || 'Not selected' }}</p>
+                    <p><strong>DateTime:</strong> {{ dateTime || 'Not selected' }}</p>
+                    <p><strong>Range:</strong> {{ range || 'Not selected' }}</p>
+                    <p><strong>Time:</strong> {{ time || 'Not selected' }}</p>
+                    <p><strong>Multiple:</strong> {{ multipleDates || 'Not selected' }}</p>
+                    <p><strong>Week:</strong> {{ week || 'Not selected' }}</p>
+                </div>
+            `;
+
+        document.getElementById("ng-app").innerHTML = template;
+
+        var app = angular.module("datePickerApp", []);
+
+        // Flatpickr Directive
+        app.directive("flatpickr", [
+          "$timeout",
+          function ($timeout) {
+            return {
+              restrict: "A",
+              require: "ngModel",
+              scope: {
+                fpOptions: "=",
+                fpOnChange: "&",
+              },
+              link: function (scope, element, attrs, ngModel) {
+                var config = angular.copy(scope.fpOptions) || {};
+
+                config.onChange = function (selectedDates, dateStr) {
+                  $timeout(function () {
+                    ngModel.$setViewValue(dateStr);
+                    if (scope.fpOnChange) {
+                      scope.fpOnChange({
+                        dates: selectedDates,
+                        dateStr: dateStr,
+                      });
+                    }
+                  });
+                };
+
+                var fp = flatpickr(element[0], config);
+
+                ngModel.$render = function () {
+                  if (ngModel.$viewValue) {
+                    fp.setDate(ngModel.$viewValue, false);
+                  }
+                };
+
+                scope.$on("$destroy", function () {
+                  fp.destroy();
+                });
+              },
+            };
+          },
+        ]);
+
+        // Controller
+        app.controller("MainCtrl", [
+          "$scope",
+          function ($scope) {
+            $scope.date = "";
+            $scope.dateTime = "";
+            $scope.range = "";
+            $scope.time = "";
+            $scope.multipleDates = "";
+            $scope.week = "";
+
+            // Flatpickr configurations
+            $scope.dateOpts = {
+              dateFormat: "Y-m-d",
+              theme: "material_blue",
+            };
+
+            $scope.dateTimeOpts = {
+              enableTime: true,
+              dateFormat: "Y-m-d H:i",
+              time_24hr: true,
+            };
+
+            $scope.rangeOpts = {
+              mode: "range",
+              dateFormat: "Y-m-d",
+            };
+
+            $scope.timeOpts = {
+              enableTime: true,
+              noCalendar: true,
+              dateFormat: "H:i",
+              time_24hr: true,
+              minuteIncrement: 15,
+            };
+
+            $scope.multiOpts = {
+              mode: "multiple",
+              dateFormat: "Y-m-d",
+            };
+
+            $scope.weekOpts = {
+              weekNumbers: true,
+              dateFormat: "Y-m-d",
+            };
+          },
+        ]);
+
+        var appElement = document.getElementById("ng-app");
+        angular.element(appElement).attr("ng-controller", "MainCtrl");
+        angular.bootstrap(appElement, ["datePickerApp"]);
+
+        console.log("✓ AngularJS app initialized");
+      }
+
+      initApp();
+    </script>
+  </body>
+</html>
