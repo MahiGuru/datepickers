@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AngularJS Datepicker Comparison - Directive Wrappers</title>
+
+    <!-- Flatpickr CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+
+    <!-- Tempus Dominus CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css"
+    />
+
+    <!-- Air Datepicker CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.css"
+    />
+
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        margin: 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .picker-section {
+        background: white;
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      }
+      .picker-section h2 {
+        margin: 0 0 20px 0;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-green {
+        background: #d4edda;
+        color: #155724;
+      }
+      .badge-blue {
+        background: #cce5ff;
+        color: #004085;
+      }
+      .badge-orange {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #444;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.2s;
+      }
+      .form-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+      }
+      .output-box {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 16px;
+      }
+      .output-box h4 {
+        margin: 0 0 16px 0;
+        color: #495057;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .output-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px dashed #ced4da;
+      }
+      .output-row:last-child {
+        border-bottom: none;
+      }
+      .output-label {
+        color: #6c757d;
+        font-size: 13px;
+      }
+      .output-value {
+        font-family: "SF Mono", "Consolas", monospace;
+        color: #212529;
+        font-weight: 600;
+        font-size: 13px;
+        background: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        max-width: 60%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .btn-group {
+        margin-top: 16px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .col {
+        flex: 1;
+        min-width: 320px;
+      }
+      .timestamp-input {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      .timestamp-input input {
+        flex: 1;
+        padding: 10px 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-family: monospace;
+      }
+      .error-box {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px;
+        text-align: center;
+      }
+      .loading-box {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        text-align: center;
+        margin: 20px auto;
+        max-width: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading indicator -->
+    <div id="loading" class="loading-box">
+      <h2>⏳ Loading libraries...</h2>
+      <p>Please wait while AngularJS and datepicker libraries are loaded.</p>
+    </div>
+
+    <!-- Error container -->
+    <div id="error-container" style="display: none"></div>
+
+    <!-- Main App (hidden until ready) -->
+    <div id="app-container" style="display: none">
+      <div class="container" ng-controller="MainController">
+        <h1>🗓️ AngularJS Datepicker Directive Wrappers</h1>
+
+        <!-- Flatpickr Section -->
+        <div class="picker-section">
+          <h2>
+            <span>📅 Flatpickr</span>
+            <span class="badge badge-green">Zero Dependencies</span>
+            <span class="badge badge-orange">~15kb gzipped</span>
+          </h2>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label>Select Date & Time:</label>
+                <input
+                  type="text"
+                  flatpickr-directive
+                  ng-model="flatpickr.date"
+                  options="flatpickr.options"
+                  placeholder="Click to pick date and time"
+                />
+              </div>
+              <div class="timestamp-input">
+                <input
+                  type="number"
+                  ng-model="flatpickr.inputTimestamp"
+                  placeholder="Enter Unix timestamp (seconds)"
+                />
+                <button
+                  class="btn btn-success"
+                  ng-click="fromTimestamp('flatpickr')"
+                >
+                  Convert
+                </button>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-primary" ng-click="setNow('flatpickr')">
+                  Set Now
+                </button>
+                <button
+                  class="btn btn-primary"
+                  ng-click="setTimestamp('flatpickr', 1703001600)"
+                >
+                  Set Dec 19, 2023
+                </button>
+                <button
+                  class="btn btn-secondary"
+                  ng-click="clearPicker('flatpickr')"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+            <div class="col">
+              <div class="output-box">
+                <h4>📤 Output Values</h4>
+                <div class="output-row">
+                  <span class="output-label">Date Object:</span
+                  ><span class="output-value"
+                    >{{ formatDate(flatpickr.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">Unix Timestamp (sec):</span
+                  ><span class="output-value"
+                    >{{ getTimestamp(flatpickr.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">Unix Timestamp (ms):</span
+                  ><span class="output-value"
+                    >{{ getTimestampMs(flatpickr.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">ISO 8601:</span
+                  ><span class="output-value"
+                    >{{ getISO(flatpickr.date) }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tempus Dominus Section -->
+        <div class="picker-section">
+          <h2>
+            <span>⏰ Tempus Dominus</span>
+            <span class="badge badge-blue">Requires Popper.js</span>
+            <span class="badge badge-orange">~25kb total</span>
+          </h2>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label>Select Date & Time:</label>
+                <input
+                  type="text"
+                  tempus-directive
+                  ng-model="tempus.date"
+                  options="tempus.options"
+                  placeholder="Click to pick date and time"
+                />
+              </div>
+              <div class="timestamp-input">
+                <input
+                  type="number"
+                  ng-model="tempus.inputTimestamp"
+                  placeholder="Enter Unix timestamp (seconds)"
+                />
+                <button
+                  class="btn btn-success"
+                  ng-click="fromTimestamp('tempus')"
+                >
+                  Convert
+                </button>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-primary" ng-click="setNow('tempus')">
+                  Set Now
+                </button>
+                <button
+                  class="btn btn-primary"
+                  ng-click="setTimestamp('tempus', 1703001600)"
+                >
+                  Set Dec 19, 2023
+                </button>
+                <button
+                  class="btn btn-secondary"
+                  ng-click="clearPicker('tempus')"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+            <div class="col">
+              <div class="output-box">
+                <h4>📤 Output Values</h4>
+                <div class="output-row">
+                  <span class="output-label">Date Object:</span
+                  ><span class="output-value"
+                    >{{ formatDate(tempus.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">Unix Timestamp (sec):</span
+                  ><span class="output-value"
+                    >{{ getTimestamp(tempus.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">Unix Timestamp (ms):</span
+                  ><span class="output-value"
+                    >{{ getTimestampMs(tempus.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">ISO 8601:</span
+                  ><span class="output-value">{{ getISO(tempus.date) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Air Datepicker Section -->
+        <div class="picker-section">
+          <h2>
+            <span>🌬️ Air Datepicker</span>
+            <span class="badge badge-green">Zero Dependencies</span>
+            <span class="badge badge-green">~13kb (Smallest)</span>
+          </h2>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label>Select Date & Time:</label>
+                <input
+                  type="text"
+                  air-datepicker-directive
+                  ng-model="airpicker.date"
+                  options="airpicker.options"
+                  placeholder="Click to pick date and time"
+                />
+              </div>
+              <div class="timestamp-input">
+                <input
+                  type="number"
+                  ng-model="airpicker.inputTimestamp"
+                  placeholder="Enter Unix timestamp (seconds)"
+                />
+                <button
+                  class="btn btn-success"
+                  ng-click="fromTimestamp('airpicker')"
+                >
+                  Convert
+                </button>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-primary" ng-click="setNow('airpicker')">
+                  Set Now
+                </button>
+                <button
+                  class="btn btn-primary"
+                  ng-click="setTimestamp('airpicker', 1703001600)"
+                >
+                  Set Dec 19, 2023
+                </button>
+                <button
+                  class="btn btn-secondary"
+                  ng-click="clearPicker('airpicker')"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+            <div class="col">
+              <div class="output-box">
+                <h4>📤 Output Values</h4>
+                <div class="output-row">
+                  <span class="output-label">Date Object:</span
+                  ><span class="output-value"
+                    >{{ formatDate(airpicker.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">Unix Timestamp (sec):</span
+                  ><span class="output-value"
+                    >{{ getTimestamp(airpicker.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">Unix Timestamp (ms):</span
+                  ><span class="output-value"
+                    >{{ getTimestampMs(airpicker.date) }}</span
+                  >
+                </div>
+                <div class="output-row">
+                  <span class="output-label">ISO 8601:</span
+                  ><span class="output-value"
+                    >{{ getISO(airpicker.date) }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load scripts in correct order -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.js"></script>
+
+    <script>
+      (function () {
+        // Check libraries and show errors
+        function checkLibraries() {
+          var errors = [];
+          if (typeof angular === "undefined") errors.push("AngularJS");
+          if (typeof flatpickr === "undefined") errors.push("Flatpickr");
+          if (typeof tempusDominus === "undefined")
+            errors.push("Tempus Dominus");
+          if (typeof AirDatepicker === "undefined")
+            errors.push("Air Datepicker");
+          return errors;
+        }
+
+        function showError(errors) {
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("error-container").style.display = "block";
+          document.getElementById("error-container").innerHTML =
+            '<div class="error-box"><h2>⚠️ Library Loading Error</h2>' +
+            "<p>Failed to load: <strong>" +
+            errors.join(", ") +
+            "</strong></p>" +
+            "<p>Try disabling ad blockers or check your internet connection.</p></div>";
+        }
+
+        // Helper: Check if value is a valid Date object
+        function isValidDate(d) {
+          return d instanceof Date && !isNaN(d.getTime());
+        }
+
+        // Helper: Ensure value is a Date object
+        function toDate(value) {
+          if (!value) return null;
+          if (isValidDate(value)) return value;
+          if (typeof value === "number") {
+            return value > 9999999999
+              ? new Date(value)
+              : new Date(value * 1000);
+          }
+          if (typeof value === "string") {
+            var parsed = new Date(value);
+            return isValidDate(parsed) ? parsed : null;
+          }
+          return null;
+        }
+
+        function initApp() {
+          var errors = checkLibraries();
+          if (errors.length > 0) {
+            showError(errors);
+            return;
+          }
+
+          // Define AngularJS module
+          angular
+            .module("datepickerDemo", [])
+
+            .controller("MainController", [
+              "$scope",
+              function ($scope) {
+                // Flatpickr config
+                $scope.flatpickr = {
+                  date: null,
+                  inputTimestamp: null,
+                  options: {
+                    enableTime: true,
+                    dateFormat: "Y-m-d H:i",
+                    time_24hr: true,
+                    minuteIncrement: 1,
+                  },
+                };
+
+                // Tempus Dominus config - using localization.hourCycle instead of deprecated useTwentyfourHour
+                $scope.tempus = {
+                  date: null,
+                  inputTimestamp: null,
+                  options: {
+                    localization: {
+                      hourCycle: "h23", // 24-hour format (0-23)
+                    },
+                    display: {
+                      components: {
+                        seconds: false,
+                      },
+                      icons: {
+                        time: "fa-solid fa-clock",
+                        date: "fa-solid fa-calendar",
+                        up: "fa-solid fa-arrow-up",
+                        down: "fa-solid fa-arrow-down",
+                        previous: "fa-solid fa-chevron-left",
+                        next: "fa-solid fa-chevron-right",
+                        today: "fa-solid fa-calendar-check",
+                        clear: "fa-solid fa-trash",
+                        close: "fa-solid fa-xmark",
+                      },
+                    },
+                  },
+                };
+
+                // Air Datepicker config
+                $scope.airpicker = {
+                  date: null,
+                  inputTimestamp: null,
+                  options: {
+                    timepicker: true,
+                    dateFormat: "yyyy-MM-dd",
+                    timeFormat: "HH:mm",
+                  },
+                };
+
+                // Format date for display (with type checking)
+                $scope.formatDate = function (date) {
+                  var d = toDate(date);
+                  if (!d) return "N/A";
+                  return d.toLocaleString();
+                };
+
+                // Get Unix timestamp in seconds (with type checking)
+                $scope.getTimestamp = function (date) {
+                  var d = toDate(date);
+                  if (!d) return "N/A";
+                  return Math.floor(d.getTime() / 1000);
+                };
+
+                // Get Unix timestamp in milliseconds (with type checking)
+                $scope.getTimestampMs = function (date) {
+                  var d = toDate(date);
+                  if (!d) return "N/A";
+                  return d.getTime();
+                };
+
+                // Get ISO string (with type checking)
+                $scope.getISO = function (date) {
+                  var d = toDate(date);
+                  if (!d) return "N/A";
+                  return d.toISOString();
+                };
+
+                // Set date from Unix timestamp (seconds)
+                $scope.setTimestamp = function (picker, ts) {
+                  $scope[picker].date = new Date(ts * 1000);
+                };
+
+                // Convert from input timestamp
+                $scope.fromTimestamp = function (picker) {
+                  var ts = $scope[picker].inputTimestamp;
+                  if (ts) {
+                    $scope[picker].date = new Date(
+                      ts > 9999999999 ? ts : ts * 1000
+                    );
+                  }
+                };
+
+                // Set current date/time
+                $scope.setNow = function (picker) {
+                  $scope[picker].date = new Date();
+                };
+
+                // Clear picker
+                $scope.clearPicker = function (picker) {
+                  $scope[picker].date = null;
+                  $scope[picker].inputTimestamp = null;
+                };
+              },
+            ])
+
+            // ============================================
+            // FLATPICKR DIRECTIVE
+            // ============================================
+            .directive("flatpickrDirective", [
+              "$timeout",
+              function ($timeout) {
+                return {
+                  restrict: "A",
+                  require: "ngModel",
+                  scope: { options: "=" },
+                  link: function (scope, element, attrs, ngModel) {
+                    var picker;
+
+                    function init() {
+                      var opts = angular.extend({}, scope.options, {
+                        onChange: function (selectedDates) {
+                          $timeout(function () {
+                            ngModel.$setViewValue(selectedDates[0] || null);
+                          });
+                        },
+                      });
+                      picker = flatpickr(element[0], opts);
+                    }
+
+                    ngModel.$render = function () {
+                      if (picker) {
+                        if (ngModel.$viewValue) {
+                          picker.setDate(ngModel.$viewValue, false);
+                        } else {
+                          picker.clear();
+                        }
+                      }
+                    };
+
+                    scope.$watch(
+                      "options",
+                      function (n, o) {
+                        if (picker && n !== o) {
+                          picker.destroy();
+                          init();
+                        }
+                      },
+                      true
+                    );
+
+                    init();
+
+                    scope.$on("$destroy", function () {
+                      if (picker) picker.destroy();
+                    });
+                  },
+                };
+              },
+            ])
+
+            // ============================================
+            // TEMPUS DOMINUS DIRECTIVE
+            // ============================================
+            .directive("tempusDirective", [
+              "$timeout",
+              function ($timeout) {
+                return {
+                  restrict: "A",
+                  require: "ngModel",
+                  scope: { options: "=" },
+                  link: function (scope, element, attrs, ngModel) {
+                    var picker, subscription;
+
+                    function init() {
+                      picker = new tempusDominus.TempusDominus(
+                        element[0],
+                        angular.extend({}, scope.options)
+                      );
+                      subscription = picker.subscribe(
+                        tempusDominus.Namespace.events.change,
+                        function (e) {
+                          $timeout(function () {
+                            // Tempus Dominus returns a DateTime object, convert to JS Date
+                            var jsDate = null;
+                            if (e.date) {
+                              jsDate = e.date.toDate
+                                ? e.date.toDate()
+                                : new Date(e.date);
+                            }
+                            ngModel.$setViewValue(jsDate);
+                          });
+                        }
+                      );
+                    }
+
+                    ngModel.$render = function () {
+                      if (picker) {
+                        if (ngModel.$viewValue) {
+                          picker.dates.setValue(
+                            tempusDominus.DateTime.convert(ngModel.$viewValue)
+                          );
+                        } else {
+                          picker.dates.clear();
+                        }
+                      }
+                    };
+
+                    init();
+
+                    scope.$on("$destroy", function () {
+                      if (subscription) subscription.unsubscribe();
+                      if (picker) picker.dispose();
+                    });
+                  },
+                };
+              },
+            ])
+
+            // ============================================
+            // AIR DATEPICKER DIRECTIVE
+            // ============================================
+            .directive("airDatepickerDirective", [
+              "$timeout",
+              function ($timeout) {
+                return {
+                  restrict: "A",
+                  require: "ngModel",
+                  scope: { options: "=" },
+                  link: function (scope, element, attrs, ngModel) {
+                    var picker;
+
+                    var localeEn = {
+                      days: [
+                        "Sunday",
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                      ],
+                      daysShort: [
+                        "Sun",
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                      ],
+                      daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+                      months: [
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
+                      ],
+                      monthsShort: [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
+                      ],
+                      today: "Today",
+                      clear: "Clear",
+                      dateFormat: "MM/dd/yyyy",
+                      timeFormat: "HH:mm",
+                      firstDay: 0,
+                    };
+
+                    function init() {
+                      var opts = angular.extend(
+                        {
+                          locale: localeEn,
+                          autoClose: true,
+                          onSelect: function (obj) {
+                            $timeout(function () {
+                              // Air Datepicker can return single date or array
+                              var selectedDate = null;
+                              if (obj.date) {
+                                selectedDate = Array.isArray(obj.date)
+                                  ? obj.date[0]
+                                  : obj.date;
+                              }
+                              ngModel.$setViewValue(selectedDate || null);
+                            });
+                          },
+                        },
+                        scope.options
+                      );
+
+                      picker = new AirDatepicker(element[0], opts);
+                    }
+
+                    ngModel.$render = function () {
+                      if (picker) {
+                        if (ngModel.$viewValue) {
+                          picker.selectDate(ngModel.$viewValue, {
+                            silent: true,
+                          });
+                        } else {
+                          picker.clear();
+                        }
+                      }
+                    };
+
+                    init();
+
+                    scope.$on("$destroy", function () {
+                      if (picker) picker.destroy();
+                    });
+                  },
+                };
+              },
+            ]);
+
+          // Show app and bootstrap Angular
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("app-container").style.display = "block";
+          angular.bootstrap(document.getElementById("app-container"), [
+            "datepickerDemo",
+          ]);
+        }
+
+        // Initialize when ready
+        if (document.readyState === "complete") {
+          setTimeout(initApp, 100);
+        } else {
+          window.addEventListener("load", function () {
+            setTimeout(initApp, 100);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
